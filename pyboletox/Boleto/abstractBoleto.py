@@ -1,9 +1,11 @@
 import datetime
+import io
 import os
 import base64
 from datetime import timedelta
 from pyboletox.Contracts.Boleto.boleto import Boleto as BoletoContract
 from pyboletox.util import Util
+from pyboletox.Boleto.Render.pdf import BoletoPDF
 
 
 class AbstractBoleto(BoletoContract):
@@ -260,7 +262,7 @@ class AbstractBoleto(BoletoContract):
 
     # Define o campo Número do documento
     def setNumeroDocumento(self, numeroDocumento):
-        self._numeroDocumento = numeroDocumento
+        self._numeroDocumento = str(numeroDocumento)
 
     # Retorna o campo Número do documento
     def getNumeroDocumento(self):
@@ -370,7 +372,10 @@ class AbstractBoleto(BoletoContract):
 
     # Define o objeto sacador avalista do boleto
     def setSacadorAvalista(self, sacadorAvalista):
-        self._sacadorAvalista = Util.addPessoa(sacadorAvalista)
+        if sacadorAvalista is None:
+            self._sacadorAvalista = None
+        else:
+            self._sacadorAvalista = Util.addPessoa(sacadorAvalista)
 
     # Retorna o objeto sacador avalista do boleto
     def getSacadorAvalista(self):
@@ -477,7 +482,7 @@ class AbstractBoleto(BoletoContract):
     # Retorna a localização do logotipo do banco relativo à pasta de imagens
     def getLogoBanco(self):
         path = os.path.dirname(os.path.abspath(__file__))
-        path = os.path.join(path, '..', '..', 'logos', self.getCodigoBanco() + '.png')
+        path = os.path.join(path, '..', 'logos', self.getCodigoBanco() + '.png')
         return path
 
     def getStatus(self):
@@ -640,8 +645,10 @@ class AbstractBoleto(BoletoContract):
         self.mostrarEnderecoFichaCompensacao = mostrarEnderecoFichaCompensacao
 
     # Render PDF
-    def renderPDF(self, print=False, instrucoes=True):
-        raise NotImplementedError("TODO")
+    def renderPDF(self, file, print=False, instrucoes=True):
+        pdf = BoletoPDF(file)
+        pdf.drawBoleto(self)
+        pdf.save()
 
     # Render HTML
     def renderHTML(self, print=False, instrucoes=True):

@@ -21,7 +21,7 @@ class Boleto(metaclass=ABCMeta):
     STATUS_CUSTOM = 99
 
     @abstractmethod
-    def renderPDF(self, print=False):
+    def renderPDF(self, file, print=False, instrucoes=True):
         pass
 
     @abstractmethod
