@@ -2,7 +2,7 @@ import os
 import re
 import math
 import unicodedata
-from datetime import datetime
+from datetime import datetime, date
 from pyboletox.Contracts.Boleto.boleto import Boleto as BoletoContract
 
 
@@ -310,12 +310,14 @@ class Util:
                                                          type=format_type)
 
     @staticmethod
-    def fatorVencimento(date, format='%Y-%m-%d'):
-        if type(date) is str:
-            date = datetime.strptime(date, format)
-        ref = datetime(year=1997, month=10, day=7)
+    def fatorVencimento(d, format='%Y-%m-%d'):
+        if type(d) is str:
+            d = date.strptime(d, format)
+        elif type(d) is datetime:
+            d = date(year=d.year, month=d.month, day=d.day)
+        ref = date(year=1997, month=10, day=7)
 
-        return (date - ref).days
+        return (d - ref).days
 
     # Remove trecho do array.
     @staticmethod
