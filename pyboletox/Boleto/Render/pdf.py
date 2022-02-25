@@ -303,6 +303,8 @@ class BoletoPDF(object):
         self.pdf_canvas.drawString(x + 2 * self.space + offset_cnpjcpf, y + 2 * self.space + self.font_size_value,
                                    text)
         text = boleto.getBeneficiario().getEnderecoCompleto()
+        font_size = self._calculate_fontsize_text_to_fit(text, width_left, self.font_size_value)
+        self.pdf_canvas.setFont(self.font_value, font_size)
         self.pdf_canvas.drawString(x + self.space, y + self.space,
                                    text)
 
@@ -465,6 +467,14 @@ class BoletoPDF(object):
             text = text[i:]
         return texts
 
+    def _calculate_fontsize_text_to_fit(self, text, size, initial_font_size):
+        fontsize = initial_font_size
+        while fontsize > 0:
+            if self.pdf_canvas.stringWidth(text, fontSize=fontsize) > size:
+                fontsize -= 1
+            else:
+                break
+        return fontsize
 
     def nextPage(self):
         """Força início de nova página"""
