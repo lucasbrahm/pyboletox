@@ -6,5 +6,9 @@ setup(
     packages=find_packages(),
     package_data={
         'pyboletox': ['logos/*.png']
-    }
+    },
+    install_requires=[
+        'requests',
+        'reportlab'
+    ]
 )
