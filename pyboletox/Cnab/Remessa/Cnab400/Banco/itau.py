@@ -188,7 +188,7 @@ class Itau(AbstractRemessaCnab400, Remessa):
         elif boleto.getDiasBaixaAutomatica() > 0:
             self.add(157, 158, self.INSTRUCAO_DEVOL_VENC_XX)
         self.add(161, 173, Util.formatCnab('9', boleto.getMoraDia(), 13, 2))
-        self.add(174, 179, boleto.getDataDesconto().strftime('%d%m%y') if int(boleto.getDesconto()) > 0 else '000000')
+        self.add(174, 179, boleto.getDataDesconto().strftime('%d%m%y') if float(boleto.getDesconto()) > 0 else '000000')
         self.add(180, 192, Util.formatCnab('9', boleto.getDesconto(), 13, 2))
         self.add(193, 205, Util.formatCnab('9', 0, 13, 2))
         self.add(206, 218, Util.formatCnab('9', 0, 13, 2))

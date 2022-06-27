@@ -87,14 +87,25 @@ class AbstractRemessa(metaclass=ABCMeta):
             return datetime.now().strftime(format)
         return self._dataRemessa.strftime(format)
 
+    def setCamposObrigatorios(self, *args):
+        self.camposObrigatorios = []
+        self.addCampoObrigatorio(*args)
+
+    def addCampoObrigatorio(self, *args):
+        for arg in args:
+            if type(arg) is list:
+                self.addCampoObrigatorio(*arg)
+            else:
+                self.camposObrigatorios.append(arg)
+
     # Retorna o código do banco
     def getCodigoBanco(self):
         return self._codigoBanco
 
-    def getIdremessa(self):
+    def getIdRemessa(self):
         return self._idremessa
 
-    def setIdremessa(self, idremessa):
+    def setIdRemessa(self, idremessa):
         self._idremessa = idremessa
 
     def getBeneficiario(self):
@@ -150,7 +161,7 @@ class AbstractRemessa(metaclass=ABCMeta):
     def isValid(self):
         messages = ''
         for campo in self.camposObrigatorios:
-            user_func = getattr(self, 'get' + campo.title(), None)
+            user_func = getattr(self, 'get' + campo[0].upper() + campo[1:], None)
             test = user_func()
             if test is None or test == '':
                 messages += f"Campo {campo} está em branco"

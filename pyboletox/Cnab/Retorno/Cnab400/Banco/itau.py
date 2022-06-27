@@ -8,6 +8,8 @@ class Itau(AbstractRetorno, RetornoCnab400):
     def __init__(self, file) -> None:
         super().__init__(file)
 
+        self._codigoBanco = BoletoContract.COD_BANCO_ITAU
+
         self._ocorrencias = {
             '02': 'Entrada confirmada',
             '03': 'Entrada rejeitada',
@@ -150,7 +152,6 @@ class Itau(AbstractRetorno, RetornoCnab400):
         }
 
     def init(self):
-        self._codigoBanco = BoletoContract.COD_BANCO_ITAU
         self._totais = {
             'liquidados':  0,
             'entradas':    0,

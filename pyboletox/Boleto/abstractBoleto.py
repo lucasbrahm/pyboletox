@@ -137,6 +137,19 @@ class AbstractBoleto(BoletoContract):
     def getProtectedFields(self):
         return self.protectedFields
 
+    # Seta os campos obrigatórios
+    def setCamposObrigatorios(self, *args):
+        self.camposObrigatorios = []
+        self.addCampoObrigatorio(*args)
+
+    # Adiciona os campos obrigatórios
+    def addCampoObrigatorio(self, *args):
+        for arg in args:
+            if type(arg) is list:
+                self.addCampoObrigatorio(*arg)
+            else:
+                self.camposObrigatorios.append(arg)
+
     # Define a agência
     def setAgencia(self, agencia):
         self._agencia = str(agencia)
@@ -247,7 +260,7 @@ class AbstractBoleto(BoletoContract):
         return self._especieDoc
 
     # Retorna o codigo da Espécie Doc
-    def getEspecieDocCodigo(self, default=99, tipo=240):
+    def getEspecieDocCodigo(self, default='99', tipo=240):
         if len(self.especiesCodigo240) > 0 and tipo == 240:
             especie = self.especiesCodigo240
         elif len(self.especiesCodigo400) > 0 and tipo == 400:
